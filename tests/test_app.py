@@ -11,3 +11,11 @@ def test_home_page():
 
 def test_app_name():
     assert app.name == "Pyth_prac"
+
+
+def test_greet_route():
+    client = app.test_client()
+    response = client.get("/greet/Satya")
+
+    assert response.status_code == 200
+    assert b"Hello, Satya!" in response.data
