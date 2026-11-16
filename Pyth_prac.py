@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 app.config["TESTING"] = False
@@ -6,7 +6,7 @@ app.config["TESTING"] = False
 
 @app.route("/")
 def home():
-    return "Hello, Flask!"
+    return render_template("index.html")
 
 
 @app.route("/greet/<name>")
