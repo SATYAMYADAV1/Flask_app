@@ -13,7 +13,8 @@ def test_home_page():
     response = client.get("/")
 
     assert response.status_code == 200
-    assert b"Hello, Flask!" in response.data
+    assert b"Satyam Yadav" in response.data
+    assert b"Cloud Platform Engineer" in response.data
 
 
 def test_app_name():

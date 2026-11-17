@@ -3,85 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Landing Page</title>
+    <title>{{ data.name }} | Portfolio</title>
     <style>
-        * {
-            box-sizing: border-box;
+        :root {
+            --bg: #07111f;
+            --bg-soft: #0f1d2d;
+            --panel: rgba(14, 24, 39, 0.8);
+            --panel-light: #f8fafc;
+            --primary: #4f8cff;
+            --primary-strong: #1d4ed8;
+            --accent: #7dd3fc;
+            --text: #e5eefb;
+            --muted: #b7c7d9;
+            --line: rgba(255,255,255,0.12);
+            --shadow: 0 25px 60px rgba(5, 10, 18, 0.45);
         }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1d4ed8);
-            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(79, 140, 255, 0.18), transparent 25%),
+                radial-gradient(circle at right center, rgba(125, 211, 252, 0.14), transparent 30%),
+                var(--bg);
+            color: var(--text);
         }
 
-        .card {
-            text-align: center;
-            padding: 48px 64px;
+        .background-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            animation: float 12s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 260px; height: 260px; background: rgba(79, 140, 255, 0.28); top: 80px; left: 5%;
+        }
+
+        .orb-2 {
+            width: 300px; height: 300px; background: rgba(125, 211, 252, 0.18); right: 8%; bottom: 10%; animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            100% { transform: translateY(-25px) translateX(14px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 24px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(9,16,28,0.95), rgba(18,42,72,0.9));
+            border: 1px solid var(--line);
             border-radius: 24px;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(10px);
-            animation: fadeIn 1.2s ease-in-out;
-            transition: transform 0.25s ease;
+            padding: 56px 42px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            animation: reveal 0.8s ease-out;
         }
 
-        .card:hover {
-            transform: translateY(-4px);
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        h1 {
-            margin: 0 0 12px;
-            font-size: 3rem;
-            letter-spacing: 1px;
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.06), transparent);
+            transform: translateX(-100%);
+            animation: sheen 6s ease-in-out infinite;
         }
 
-        p {
-            margin: 0;
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.85);
+        @keyframes sheen {
+            0% { transform: translateX(-120%); }
+            100% { transform: translateX(120%); }
         }
 
-        .btn {
+        .eyebrow {
             display: inline-block;
-            margin-top: 24px;
-            padding: 12px 24px;
+            background: rgba(125, 211, 252, 0.12);
+            color: var(--accent);
+            border: 1px solid rgba(125, 211, 252, 0.25);
             border-radius: 999px;
-            text-decoration: none;
-            font-weight: bold;
-            background: linear-gradient(135deg, #f59e0b, #fbbf24);
-            color: #111827;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            font-weight: 700;
         }
 
-        .btn:hover {
-            transform: scale(1.06);
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            line-height: 1.1;
+            letter-spacing: -0.04em;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(22px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .hero h2 {
+            margin: 14px 0 22px;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 999px;
+            padding: 8px 14px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .hero p {
+            max-width: 800px;
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 1.04rem;
+        }
+
+        .section {
+            background: rgba(14, 24, 39, 0.78);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 30px 28px;
+            margin-top: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        h3 {
+            margin: 0 0 20px;
+            color: var(--text);
+            font-size: 1.6rem;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 18px;
+            line-height: 1.9;
+            color: var(--muted);
+        }
+
+        .projects-grid, .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .project-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            padding: 18px;
+            transition: transform 0.25s ease, border-color 0.2s ease;
+            min-height: 220px;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(125, 211, 252, 0.35);
+        }
+
+        .project-card h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #ffffff;
+            font-size: 1.15rem;
+        }
+
+        .project-card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .cert-badge {
+            display: inline-block;
+            padding: 10px 14px;
+            margin: 6px 8px 6px 0;
+            border-radius: 999px;
+            border: 1px solid rgba(125, 211, 252, 0.24);
+            background: rgba(125, 211, 252, 0.08);
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .experience-item {
+            background: rgba(255,255,255,0.02);
+            border-left: 4px solid var(--primary);
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+        }
+
+        .experience-item strong {
+            color: #ffffff;
+            display: block;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+
+        .experience-item .year {
+            color: var(--accent);
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .experience-item p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 18px; }
+            .hero { padding: 36px 22px; }
+            .section { padding: 22px 18px; }
+            .contact { flex-direction: column; }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Hello, Flask!</h1>
-        <p>Welcome to the animated landing page.</p>
-        <a class="btn" href="/greet/Satya">Say Hello</a>
+    <div class="background-orb orb-1"></div>
+    <div class="background-orb orb-2"></div>
+
+    <div class="container">
+        <div class="hero">
+            <div class="eyebrow">Profile</div>
+            <h1>{{ data.name }}</h1>
+            <h2>{{ data.title }}</h2>
+            <div class="contact">
+                <span class="pill">📍 {{ data.city }}</span>
+                <span class="pill">✉️ {{ data.email }}</span>
+                <span class="pill">📞 {{ data.mobile }}</span>
+            </div>
+            <p>{{ data.intro }}</p>
+        </div>
+
+        <div class="section">
+            <h3>Key Achievements</h3>
+            <ul>
+                {% for item in data.achievements %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>Projects</h3>
+            <div class="projects-grid">
+                {% for project in data.projects %}
+                <div class="project-card">
+                    <h4>{{ project.name }}</h4>
+                    <p>{{ project.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Certifications</h3>
+            <div class="cert-grid">
+                {% for cert in data.certificates %}
+                <span class="cert-badge">{{ cert }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Experience by Domain</h3>
+            {% for exp in data.experience %}
+            <div class="experience-item">
+                <strong>{{ exp.domain }}</strong>
+                <span class="year">{{ exp.years }}</span>
+                <p>{{ exp.detail }}</p>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>
